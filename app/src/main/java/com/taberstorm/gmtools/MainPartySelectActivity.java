@@ -159,6 +159,7 @@ public class MainPartySelectActivity extends AppCompatActivity {
         public void onItemClick(AdapterView parent, View v, int position, long id) {
             SharedPreferences.Editor editor = getSharedPreferences("PartyChoice", MODE_PRIVATE).edit();
             editor.putString("party", partyList.get(position).toString());
+            editor.commit();
             Intent intent = new Intent(getApplicationContext(), PartyActivity.class);
             startActivity(intent);
         }

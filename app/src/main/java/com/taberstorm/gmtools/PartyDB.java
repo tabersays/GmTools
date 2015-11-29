@@ -60,7 +60,7 @@ public class PartyDB {
         String[] columns = new String[]{CHARACTER_NAME};
         String selection = CHARACTER_PARTY + "=?";
         String[] choice = new String[]{party};
-        Cursor mCursor = database.query(true, CHARACTER_TABLE, columns, selection, choice, null, null, null, null);
+        Cursor mCursor = database.query(CHARACTER_TABLE, columns, selection, choice, null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
         }
@@ -70,5 +70,10 @@ public class PartyDB {
     public long deletePartyRecord(String party) {
         String[] columns = new String[] {party};
         return database.delete(PARTY_TABLE, PARTY_NAME + "=?", columns);
+    }
+
+    public long deleteCharacterRecord(String character) {
+        String[] columns = new String[] {character};
+        return database.delete(CHARACTER_TABLE, CHARACTER_NAME+ "=?", columns);
     }
 }

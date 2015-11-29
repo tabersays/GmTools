@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,7 +32,6 @@ public class PartyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_party);
         ListView characterListView = (ListView) findViewById(R.id.listViewCharacterList);
         SharedPreferences preferences = getSharedPreferences("PartyChoice", MODE_PRIVATE);
-        Toast.makeText(getApplicationContext(), preferences.getString("party", "Just Kidding"), Toast.LENGTH_LONG);
         partyDB = new PartyDB(getApplicationContext());
         Cursor characters = partyDB.selectCharacterRecord(preferences.getString("party", ""));
         characterList = new ArrayList<>();
@@ -40,6 +40,7 @@ public class PartyActivity extends AppCompatActivity {
             characters.moveToNext();
         }
         partyListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, characterList);
+        characterListView.setOnItemLongClickListener(deleteCharacter);
         addCharacterButton = (Button) findViewById(R.id.buttonAddCharacter);
         addCharacterButton.setOnClickListener(addCharacter);
         characterListView.setAdapter(partyListAdapter);
@@ -123,6 +124,7 @@ public class PartyActivity extends AppCompatActivity {
             partyDB.createCharacterRecord(characterName.getText().toString(), preferences.getString("party", ""), 0);
             characterList.add(characterName.getText().toString());
             partyListAdapter.notifyDataSetChanged();
+
         }
     };
 
@@ -130,6 +132,44 @@ public class PartyActivity extends AppCompatActivity {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             //should do nothing
+        }
+    };
+
+    public void deleteCharacter(int position){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Delete Character?");
+
+        alertDialogBuilder.setPositiveButton("Yes", new DeleteCharacterOnClickListener(position));
+
+        alertDialogBuilder.setNegativeButton("Cancel", cancelButton);
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public class DeleteCharacterOnClickListener implements DialogInterface.OnClickListener
+    {
+
+        int position;
+        public DeleteCharacterOnClickListener(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialogInterface, int which)
+        {
+            partyDB = new PartyDB(getApplicationContext());
+            partyDB.deleteCharacterRecord(characterList.get(position).toString());
+            characterList.remove(position);
+            partyListAdapter.notifyDataSetChanged();
+        }
+
+    };
+
+    private AdapterView.OnItemLongClickListener deleteCharacter = new AdapterView.OnItemLongClickListener() {
+        public boolean onItemLongClick(AdapterView parent, View v, int position, long id) {
+            deleteCharacter(position);
+            return true;
         }
     };
 }
