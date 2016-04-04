@@ -16,7 +16,7 @@ public class PartyDBHelper extends SQLiteOpenHelper {
 
     // Database creation sql statement
     private static final String DATABASE_CREATE_TABLE_PARTIES = "CREATE TABLE Parties (name TEXT PRIMARY KEY)";
-    private static final String DATABASE_CREATE_TABLE_CHARACTERS = "CREATE TABLE Characters (name TEXT PRIMARY KEY , party TEXT , initiative INTEGER)";
+    private static final String DATABASE_CREATE_TABLE_CHARACTERS = "CREATE TABLE Characters (name TEXT PRIMARY KEY , party TEXT  , initiative INTEGER)";
 
     public PartyDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

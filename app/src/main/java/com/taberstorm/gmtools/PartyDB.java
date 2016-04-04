@@ -57,7 +57,7 @@ public class PartyDB {
     }
 
     public Cursor selectCharacterRecord(String party) {
-        String[] columns = new String[]{CHARACTER_NAME};
+        String[] columns = new String[]{CHARACTER_NAME, CHARACTER_INITIATIVE};
         String selection = CHARACTER_PARTY + "=?";
         String[] choice = new String[]{party};
         Cursor mCursor = database.query(CHARACTER_TABLE, columns, selection, choice, null, null, null, null);
@@ -67,8 +67,18 @@ public class PartyDB {
         return mCursor;
     }
 
+    public boolean updateCharacterRecord(String originalName, String name, int initiative) {
+        String[] columns = new String[] {originalName};
+        ContentValues values = new ContentValues();
+        values.put(CHARACTER_NAME, name);
+        values.put(CHARACTER_INITIATIVE, initiative);
+        database.update(CHARACTER_TABLE, values, CHARACTER_NAME + "=?",  columns);
+        return true;
+    }
+
     public long deletePartyRecord(String party) {
         String[] columns = new String[] {party};
+        database.delete(CHARACTER_TABLE, CHARACTER_PARTY + "=?", columns);
         return database.delete(PARTY_TABLE, PARTY_NAME + "=?", columns);
     }
 
